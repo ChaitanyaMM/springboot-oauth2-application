@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.security.outh2.SpringOuth2AppApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.194 s - in com.security.outh2.SpringOuth2AppApplicationTests
