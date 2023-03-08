@@ -23,4 +23,10 @@ public class CustomerService {
 		return customerRepo.save(encrypte);
 	}
 
+
+	public Customer findByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
