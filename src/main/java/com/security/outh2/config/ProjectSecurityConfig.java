@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -21,9 +22,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 
 public class ProjectSecurityConfig {
-
-	@Autowired
-	private AppUserDetails appUserDetails;
 
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -43,23 +41,23 @@ public class ProjectSecurityConfig {
 				config.setMaxAge(3600L);
 				return config;
 			}
-		}).and().csrf().disable().authorizeHttpRequests(
-				(auth) -> auth.antMatchers("/api/user").permitAll().antMatchers("/notices", "/customer").permitAll())
+		})
+				// .and().csrf().ignoringAntMatchers("/notices")// to allow the apis which are
+				// not sensitive
+
+				.and().csrf().ignoringAntMatchers("/notices")
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+
+//		 .and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)).ignoringAntMatchers("/contact").  //XSRF-TOKEN //X-XSRF-TOKEN
+//        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // for validating the csrf token generated from browser 
+//		.and().csrf().disable()
+				.and().authorizeHttpRequests((auth) -> auth.antMatchers("/api/user").permitAll()
+						.antMatchers("/notices", "/customer").permitAll())
 				.httpBasic(Customizer.withDefaults());
 
-		http.authenticationProvider(authenticationProvider());
+		http.authenticationProvider(new AppUserNamePasswordAuthenticator());
 
 		return http.build();
-	}
-
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-		authProvider.setUserDetailsService(appUserDetails);
-		authProvider.setPasswordEncoder(passwordEncoder());
-
-		return authProvider;
 	}
 
 	@Bean
