@@ -25,8 +25,7 @@ public class CustomerService {
 
 
 	public Customer findByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return customerRepo.findByEmail(email).get(0);
 	}
 
 }

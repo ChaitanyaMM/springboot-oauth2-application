@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-
 public class ProjectSecurityConfig {
 
 	@Bean
@@ -42,17 +41,10 @@ public class ProjectSecurityConfig {
 				return config;
 			}
 		})
-				// .and().csrf().ignoringAntMatchers("/notices")// to allow the apis which are
-				// not sensitive
 
-				.and().csrf().ignoringAntMatchers("/notices")
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-
-//		 .and().csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler)).ignoringAntMatchers("/contact").  //XSRF-TOKEN //X-XSRF-TOKEN
-//        csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // for validating the csrf token generated from browser 
-//		.and().csrf().disable()
-				.and().authorizeHttpRequests((auth) -> auth.antMatchers("/api/user").permitAll()
-						.antMatchers("/notices", "/customer").permitAll())
+		.and().csrf().disable().authorizeHttpRequests((auth) ->auth
+				.antMatchers("/api/notices", "/api/user").authenticated()
+                .antMatchers("/api/customer").permitAll())
 				.httpBasic(Customizer.withDefaults());
 
 		http.authenticationProvider(new AppUserNamePasswordAuthenticator());

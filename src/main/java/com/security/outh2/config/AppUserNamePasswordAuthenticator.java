@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import com.security.outh2.entity.Customer;
 import com.security.outh2.repository.CustomerRepository;
 
+
+ //custom authentication provider
+
 @Component
 public class AppUserNamePasswordAuthenticator implements AuthenticationProvider {
 
